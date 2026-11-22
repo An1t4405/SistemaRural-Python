@@ -16,6 +16,7 @@ from cryptography.fernet import Fernet, InvalidToken
 from .errores import ErrorValidacion
 
 _PATRON_DNI = re.compile(r"^\d{8}$")
+_PATRON_CE = re.compile(r"^[A-Za-z0-9]{9,12}$")
 
 
 def validar_dni(dni: str) -> str:
@@ -24,6 +25,19 @@ def validar_dni(dni: str) -> str:
     if not _PATRON_DNI.fullmatch(dni):
         raise ErrorValidacion("El DNI debe tener exactamente 8 dígitos numéricos.")
     return dni
+
+
+def validar_documento(tipo: str, numero: str) -> tuple[str, str]:
+    """Valida DNI peruano o Carné de Extranjería (9 a 12 caracteres alfanuméricos)."""
+    tipo = str(tipo).strip().upper()
+    numero = str(numero).strip().upper()
+    if tipo == "DNI":
+        return tipo, validar_dni(numero)
+    if tipo in ("CE", "CARNÉ DE EXTRANJERÍA", "CARNE DE EXTRANJERIA"):
+        if not _PATRON_CE.fullmatch(numero):
+            raise ErrorValidacion("El Carné de Extranjería debe tener entre 9 y 12 caracteres alfanuméricos.")
+        return "CE", numero
+    raise ErrorValidacion("Seleccione DNI o Carné de Extranjería.")
 
 
 def enmascarar_dni(dni: str) -> str:
@@ -36,6 +50,7 @@ class Cifrador:
 
     def __init__(self, ruta_clave="clave.key"):
         ruta = Path(ruta_clave)
+        ruta.parent.mkdir(parents=True, exist_ok=True)
         if ruta.exists():
             clave = ruta.read_bytes().strip()
         else:
@@ -68,6 +83,12 @@ class Cifrador:
 
     def hash_dni(self, dni: str) -> str:
         return hmac.new(self._sal, dni.encode("utf-8"), hashlib.sha256).hexdigest()
+
+    def hash_documento(self, tipo: str, numero: str) -> str:
+        """Hash separado por tipo para evitar colisiones entre DNI y CE."""
+        if tipo == "DNI":
+            return self.hash_dni(numero)  # conserva las claves de los pacientes antiguos
+        return hmac.new(self._sal, f"{tipo}|{numero}".encode("utf-8"), hashlib.sha256).hexdigest()
 
 
 _cifrador = None

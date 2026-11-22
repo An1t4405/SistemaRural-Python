@@ -19,3 +19,15 @@ class NoEncontrado(ErrorSistema):
 
 class CupoAgotado(ErrorSistema):
     """No hay cupos disponibles para ese médico, fecha y turno (RF-03)."""
+
+
+class PermisoDenegado(ErrorSistema):
+    """El rol del usuario no permite esa operación (control de acceso por rol)."""
+
+
+class CredencialesInvalidas(ErrorSistema):
+    """Usuario o contraseña incorrectos, o cuenta desactivada."""
+
+
+class CuentaBloqueada(ErrorSistema):
+    """Demasiados intentos fallidos: la cuenta queda bloqueada unos minutos."""
