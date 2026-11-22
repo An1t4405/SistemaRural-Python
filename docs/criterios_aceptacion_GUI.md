@@ -14,3 +14,6 @@ Cada componente interactivo de `VentanaPrincipal` se vincula con un evento, su h
 | CA-08 | Botones de estado (Reservado / En atención / Completado) | clic → `_on_estado` | El estado del turno cambia y se refleja en la tabla (RF-05). | `test_ticket_cambia_de_estado` |
 | CA-09 | Botón «Generar» (Reportes) | clic → `_on_reporte` | Muestra total de atenciones y las 5 patologías más frecuentes del periodo elegido (RF-06). | `test_reportes_diario_semanal_mensual` |
 | CA-10 | Cualquier botón | cualquier error | Los errores controlados se muestran en un cuadro de aviso; el programa no se cierra ni pierde datos. | `_ejecutar()` en `interfaz.py` |
+
+| CA-11 | Selector «Hora (30 min)» (Citas y turnos) | clic → `_on_agendar` | Solo agenda dentro de 08:00–12:00 y 14:00–18:00; bloquea cruces para el mismo profesional. | `test_citas_respetan_horarios_y_no_se_superponen` |
+| CA-12 | Botones «Exportar Excel» y «Guardar resumen TXT» (Reportes) | clic → `_on_exportar_excel`, `_on_exportar_txt` | Guarda los listados y resumen con DNI enmascarado. | `test_exportaciones_txt_y_excel` |
