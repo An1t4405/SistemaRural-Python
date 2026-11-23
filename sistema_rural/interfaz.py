@@ -307,7 +307,7 @@ class VentanaPrincipal(tk.Tk):
             for clave in ("h_ale", "h_ant"):
                 self._entradas[clave].state(["readonly"])
         bt = ttk.Frame(top)
-        bt.grid(row=1, column=0, columnspan=6, sticky="w", pady=4)
+        bt.grid(row=2, column=0, columnspan=6, sticky="w", pady=4)
         self._boton(bt, "Cargar historia", self._on_cargar_historia)
         self._boton(bt, "Guardar alergias/antecedentes", self._on_guardar_historia, P.HISTORIA_EDITAR)
         nueva = ttk.LabelFrame(m, text="Nueva atención", padding=8)
